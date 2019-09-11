@@ -1,24 +1,29 @@
-import React from 'react';
-import {Card, Button} from 'antd';
-import './App.css';
+import React from "react";
+import { Route, Switch } from "react-router-dom";
+import Screen from "./Screen";
+import User from "./User";
+import Backend from "./backend";
+import { Layout } from "antd";
+import "./App.css";
 
-const { Meta } = Card;
+const { Header, Footer, Sider, Content } = Layout;
 
 function App() {
   return (
-    <div className="App" >
-      <a className="App-body">
-      <Card
-        hoverable
-        style={{ width: 240, margin: "auto"}}
-        cover={<img alt="example" src="https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png" />}
-      >
-      <Button type="primary">Primary</Button>
-      <Meta title="this is a person" description="this is a description" />
-      </Card>
-      </a>
-    </div>
-  )
+    <Switch>
+      <Route exact path="/user" component={User} />
+      <Route path="/" component={Screen} />
+      <Route path="/backend" component={Backend} />
+      {/* when none of the above match, <NoMatch> will be rendered */}
+      {/* <Route component={NoMatch} /> */}
+    </Switch>
+
+    // <div className="App" >
+    //   <a className="App-body">
+
+    //   </a>
+    // </div>
+  );
 }
 
 export default App;
