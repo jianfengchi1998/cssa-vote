@@ -4,7 +4,7 @@ import React, { memo, useContext } from 'react'
 
 import { Context } from '../reducer'
 import SingerCard from '../components/card'
-import { singers } from '../../config'
+
 // import { backendURL } from '../../config'
 
 // const axios = require('axios')
@@ -35,11 +35,9 @@ export default memo(() => {
      *
      *
      */
-    <div>
+    <>
       <Row type="flex" gutter={100} justify="center">
-        {singers.filter((singer) => (
-          state.singers.includes(singer.id)
-        )).map((singer, i) => (
+        {state.singers.map((singer, i) => (
           <Col span={5} key={i}>
             <SingerCard
               isLike={singer.isLike}
@@ -49,6 +47,6 @@ export default memo(() => {
           </Col>
         ))}
       </Row>
-    </div>
+    </>
   )
 })

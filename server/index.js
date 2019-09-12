@@ -1,6 +1,14 @@
+import 'regenerator-runtime/runtime'
 import path from 'path'
+import bodyParser from 'body-parser'
 import { matchPath } from 'react-router-dom'
 import routes from '../src/routes'
+import {
+  state,
+  setSingers,
+  setSinger,
+  setIsVote,
+} from '../database/data'
 
 const express = require('express')
 
@@ -10,11 +18,31 @@ const http = require('http').createServer(app)
 
 // const singers = require("../data/data");
 
+app.use(bodyParser.json())
 app.use(express.static('public'))
 
 // app.get("/getAllSingers", (req, res) => res.send(singers));
 
-app.get('/*', (req, res) => {
+app.get('/getState', (req, res) => {
+  res.send(state)
+})
+
+app.post('/setSingers', (req, res) => {
+  setSingers(req.body)
+  res.send(state)
+})
+
+app.post('/setSinger', (req, res) => {
+  setSinger(req.body.singer)
+  res.send(state)
+})
+
+app.post('/setIsVote', (req, res) => {
+  setIsVote(req.body.isVote)
+  res.send(state)
+})
+
+app.get('*', (req, res) => {
   if (!routes.find((route) => matchPath(req.url, route))) {
     res.status(404)
     res.send('Not found')

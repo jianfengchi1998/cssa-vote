@@ -2,10 +2,11 @@ import React, { memo, useState, useContext } from 'react'
 import { Row } from 'antd'
 import Select from 'react-select'
 import { Context } from '../reducer'
-import {
-  setSingers, clean, setSinger, setIsVote,
-} from '../actions'
+import { postServerData } from '../../utils'
+import { setState } from '../actions'
+
 import { singers } from '../../config'
+
 // import "./components/dataManage";
 // import "./components/data";
 export default memo(() => {
@@ -26,30 +27,31 @@ export default memo(() => {
         }}
       />
       <button
-        onClick={() => {
-          dispatch(setSingers(singersSelected))
+        onClick={async () => {
+          const newState = await postServerData('/setSingers', singersSelected)
+          dispatch(setState(newState))
         }}
       >
         start
       </button>
       <button
-        onClick={() => {
-          dispatch(clean())
-        }}
+        onClick={async () => {
+          const newState = await postServerData('/setSingers', [])
+          dispatch(setState(newState))
+        }}      
       >
         stop
       </button>
       <Row>
         <select
           value={state.singer}
-          onChange={(e) => {
-            dispatch(setSinger(e.target.value))
+          onChange={async (e) => {
+            const newState = await postServerData('/setSinger', { singer: e.target.value })
+            dispatch(setState(newState))
           }}
         >
           {
-            singers.filter((singer) => (
-              state.singers.includes(singer.id)
-            )).map((singer, i) => (
+            state.singers.map((singer, i) => (
               <option
                 key={i}
                 value={singer.id}
@@ -62,10 +64,11 @@ export default memo(() => {
       </Row>
       <Row>
         <button
-          disabled={state.singers.indexOf(state.singer) === state.singers.length - 1}
-          onClick={() => {
-            const newSinger = state.singers[state.singers.indexOf(state.singer) + 1]
-            dispatch(setSinger(newSinger))
+          disabled={state.singers.map((singer) => singer.id).indexOf(state.singer) === state.singers.length - 1}
+          onClick={async () => {
+            const newSinger = state.singers[state.singers.map((singer) => singer.id).indexOf(state.singer) + 1].id
+            const newState = await postServerData('/setSinger', { singer: newSinger })
+            dispatch(setState(newState))
           }}
         >
           next
@@ -74,16 +77,18 @@ export default memo(() => {
       <Row>
         <button
           disabled={state.isVote}
-          onClick={() => {
-            dispatch(setIsVote(true))
+          onClick={async () => {
+            const newState = await postServerData('/setIsVote', { isVote: true })
+            dispatch(setState(newState))
           }}
         >
           start voting
         </button>
         <button
           disabled={!state.isVote}
-          onClick={() => {
-            dispatch(setIsVote(false))
+          onClick={async () => {
+            const newState = await postServerData('/setIsVote', { isVote: false })
+            dispatch(setState(newState))
           }}
         >
           end voting

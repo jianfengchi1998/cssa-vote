@@ -1,9 +1,6 @@
 import React, { useReducer, createContext } from 'react'
 import PropTypes from 'prop-types'
-
-import {
-  SET_SINGERS, CLEAN, SET_SINGER, SET_ISVOTE,
-} from './actions'
+import { SET_STATE } from './actions'
 
 const initialState = {
   singers: [],
@@ -13,22 +10,13 @@ const initialState = {
 
 const reducer = (state, action) => {
   switch (action.type) {
-    case SET_SINGERS:
+    case SET_STATE:
       return {
         ...state,
         singers: action.singers,
-        singer: action.singers[0],
+        singer: action.singer,
+        isVote: action.isVote,
       }
-    case CLEAN:
-      return {
-        ...state,
-        singers: [],
-        singer: '',
-      }
-    case SET_SINGER:
-      return { ...state, singer: action.singer }
-    case SET_ISVOTE:
-      return { ...state, isVote: action.isVote }
     default:
       return state
   }
