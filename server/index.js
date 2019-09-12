@@ -2,9 +2,10 @@ import path from 'path'
 import { matchPath } from 'react-router-dom'
 import routes from '../src/routes'
 
-const express = require("express");
-const app = express();
-var http = require("http").createServer(app);
+const express = require('express')
+
+const app = express()
+const http = require('http').createServer(app)
 // var io = require("socket.io")(http);
 
 // const singers = require("../data/data");
@@ -14,13 +15,13 @@ app.use(express.static('public'))
 // app.get("/getAllSingers", (req, res) => res.send(singers));
 
 app.get('/*', (req, res) => {
-    if (!routes.find((route) => matchPath(req.url, route))) {
-        res.status(404)
-        res.send('Not found')
-        return
-    }
+  if (!routes.find((route) => matchPath(req.url, route))) {
+    res.status(404)
+    res.send('Not found')
+    return
+  }
 
-    res.sendFile(path.join(__dirname, '../index.html'))
+  res.sendFile(path.join(__dirname, '../index.html'))
 })
 
 // io.on("connect", function(socket) {
@@ -33,8 +34,8 @@ app.get('/*', (req, res) => {
 //   });
 // });
 
-http.listen(5000, function() {
-  console.log("listening on *:5000");
-});
+http.listen(5000, () => {
+  console.log('listening on *:5000')
+})
 
 // app.listen(port, () => console.log(`Example app listening on port ${port}!`));

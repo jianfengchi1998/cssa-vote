@@ -1,7 +1,12 @@
-import React, { useState, Component } from 'react'
+import React, { useState, useContext } from 'react'
+import { Context } from '../reducer'
 import SingerCard from '../components/card'
 
 export default function User() {
+  const { state } = useContext(Context)
+
+  console.log(state)
+
   const [isLike, setLike] = useState(false)
   const voteClick = () => {
     // send vote to backend

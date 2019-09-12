@@ -2,7 +2,9 @@ import React, { memo, useState, useContext } from 'react'
 import { Row } from 'antd'
 import Select from 'react-select'
 import { Context } from '../reducer'
-import { setSingers, clean, setSinger } from '../actions'
+import {
+  setSingers, clean, setSinger, setIsVote,
+} from '../actions'
 import { singers } from '../../config'
 // import "./components/dataManage";
 // import "./components/data";
@@ -33,7 +35,7 @@ export default memo(() => {
       <button
         onClick={() => {
           dispatch(clean())
-        }}      
+        }}
       >
         stop
       </button>
@@ -62,10 +64,29 @@ export default memo(() => {
         <button
           disabled={state.singers.indexOf(state.singer) === state.singers.length - 1}
           onClick={() => {
-            dispatch(setSinger(state.singers[state.singers.indexOf(state.singer) + 1]))
+            const newSinger = state.singers[state.singers.indexOf(state.singer) + 1]
+            dispatch(setSinger(newSinger))
           }}
         >
           next
+        </button>
+      </Row>
+      <Row>
+        <button
+          disabled={state.isVote}
+          onClick={() => {
+            dispatch(setIsVote(true))
+          }}
+        >
+          start voting
+        </button>
+        <button
+          disabled={!state.isVote}
+          onClick={() => {
+            dispatch(setIsVote(false))
+          }}
+        >
+          end voting
         </button>
       </Row>
     </>
