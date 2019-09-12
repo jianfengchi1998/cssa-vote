@@ -11,8 +11,8 @@ const { Header, Footer, Sider, Content } = Layout;
 function App() {
   return (
     <Switch>
-      <Route exact path="/user" component={User} />
-      <Route path="/" component={Screen} />
+      <Route exact path="/" component={User} />
+      <Route path="/screen" component={Screen} />
       <Route path="/backend" component={Backend} />
       {/* when none of the above match, <NoMatch> will be rendered */}
       {/* <Route component={NoMatch} /> */}

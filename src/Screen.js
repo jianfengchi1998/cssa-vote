@@ -1,78 +1,42 @@
 import { Row, Col } from "antd";
-import React, { useState, Component } from "react";
+import React, { useState, useEffect } from "react";
+import io from "socket.io-client";
 import SingerCard from "./components/card";
+import { backendURL } from "./constants";
+import shortid from "shortid";
+const axios = require("axios");
+
+const socket = io(backendURL);
 
 export default function Screen() {
-  // const [isLike, setLike] = useState(false);
+  const [singers, setSingers] = useState([]);
   const displayVote = () => {
     //grab vote number from backend and display on card
   };
-  const singers = [
-    {
-      name: "村花",
-      photo: "https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png",
-      description: "巴村 村花",
-      songName: "山歌",
-      cardStyle: { width: "100%", textAlign: "center" },
-      isLike: false
-    },
-    {
-      name: "村花",
-      photo: "https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png",
-      description: "巴村 村花",
-      songName: "山歌",
-      cardStyle: { width: "100%", textAlign: "center" },
-      isLike: false
-    },
-    {
-      name: "村花",
-      photo: "https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png",
-      description: "巴村 村花",
-      songName: "山歌",
-      cardStyle: { width: "100%", textAlign: "center" },
-      isLike: false
-    },
-    {
-      name: "村花",
-      photo: "https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png",
-      description: "巴村 村花",
-      songName: "山歌",
-      cardStyle: { width: "100%", textAlign: "center" },
-      isLike: false
-    },
-    {
-      name: "村花",
-      photo: "https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png",
-      description: "巴村 村花",
-      songName: "山歌",
-      cardStyle: { width: "100%", textAlign: "center" },
-      isLike: false
-    },
-    {
-      name: "村花",
-      photo: "https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png",
-      description: "巴村 村花",
-      songName: "山歌",
-      cardStyle: { width: "100%", textAlign: "center" },
-      isLike: false
-    },
-    {
-      name: "村花",
-      photo: "https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png",
-      description: "巴村 村花",
-      songName: "山歌",
-      cardStyle: { width: "100%", textAlign: "center" },
-      isLike: false
-    },
-    {
-      name: "村花",
-      photo: "https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png",
-      description: "巴村 村花",
-      songName: "山歌",
-      cardStyle: { width: "100%", textAlign: "center" },
-      isLike: false
-    }
-  ];
+
+  useEffect(() => {
+    // socket.on("connect", function() {
+    //   socket.emit("getAllSingers");
+    //   socket.on("allSingers", data => {
+    //     console.log(data);
+    //   });
+    // });
+
+    axios
+      .get(backendURL + "/getAllSingers")
+      .then(function(response) {
+        // handle success
+        console.log(response.data);
+        setSingers(response.data);
+      })
+      .catch(function(error) {
+        // handle error
+        console.log(error);
+      })
+      .finally(function() {
+        // always executed
+      });
+  }, []);
   return (
     //Here, you use map function to map each values into the props.
     /**
@@ -92,7 +56,7 @@ export default function Screen() {
     <div>
       <Row type="flex" gutter={100} justify="center">
         {singers.map(singer => (
-          <Col span={5}>
+          <Col span={5} key={shortid.generate()}>
             <SingerCard
               isLike={singer.isLike}
               voteClick={() => displayVote()}
