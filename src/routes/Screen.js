@@ -3,7 +3,7 @@ import React from 'react'
 // import io from 'socket.io-client'
 // import shortid from 'shortid'
 import SingerCard from '../components/card'
-import singers from '../../data/data'
+import { singers } from '../../config'
 // import { backendURL } from '../../config'
 
 const axios = require('axios')

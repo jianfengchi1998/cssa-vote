@@ -1,30 +1,73 @@
-import React from 'react'
-
-import singers from '../../data/data'
+import React, { memo, useState, useContext } from 'react'
+import { Row } from 'antd'
+import Select from 'react-select'
+import { Context } from '../reducer'
+import { setSingers, clean, setSinger } from '../actions'
+import { singers } from '../../config'
 // import "./components/dataManage";
 // import "./components/data";
-export default () => {
+export default memo(() => {
+  const { state, dispatch } = useContext(Context)
+  const [singersSelected, setSingerSelected] = useState([])
+
   return (
     <>
-      <select
+      <Select
+        defaultValue={singersSelected}
+        isMulti
+        options={singers.map((singer) => ({
+          value: singer.id,
+          label: singer.name,
+        }))}
         onChange={(e) => {
-          
+          setSingerSelected(e.map((item) => item.value))
+        }}
+      />
+      <button
+        onClick={() => {
+          dispatch(setSingers(singersSelected))
         }}
       >
-        {
-          singers.map((singer, i) => (
-            <option
-              key={i}
-              value={singer.id}
-            >
-              {singer.name}
-            </option>
-          ))
-        }
-      </select>
-      <div>
-        <button>click me</button>
-      </div>
+        start
+      </button>
+      <button
+        onClick={() => {
+          dispatch(clean())
+        }}      
+      >
+        stop
+      </button>
+      <Row>
+        <select
+          value={state.singer}
+          onChange={(e) => {
+            dispatch(setSinger(e.target.value))
+          }}
+        >
+          {
+            singers.filter((singer) => (
+              state.singers.includes(singer.id)
+            )).map((singer, i) => (
+              <option
+                key={i}
+                value={singer.id}
+              >
+                {singer.name}
+              </option>
+            ))
+          }
+        </select>
+      </Row>
+      <Row>
+        <button
+          disabled={state.singers.indexOf(state.singer) === state.singers.length - 1}
+          onClick={() => {
+            dispatch(setSinger(state.singers[state.singers.indexOf(state.singer) + 1]))
+          }}
+        >
+          next
+        </button>
+      </Row>
     </>
   )
-}
+})

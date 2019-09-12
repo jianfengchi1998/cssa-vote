@@ -8,9 +8,6 @@ var http = require("http").createServer(app);
 // var io = require("socket.io")(http);
 
 // const singers = require("../data/data");
-// var cors = require("cors");
-
-// app.use(cors());
 
 app.use(express.static('public'))
 
