@@ -10,34 +10,33 @@
     "react": "^16.9.0",
     "react-dom": "^16.9.0",
     "react-router-dom": "^5.0.1",
-    "react-scripts": "3.1.1",
     "shortid": "^2.2.15",
     "socket.io": "^2.2.0",
     "socket.io-client": "^2.2.0"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "dev": "nodemon ./server/index.js"
-  },
-  "eslintConfig": {
-    "extends": "react-app"
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
+    "start": "node ./dist/server.js",
+    "build": "node node_modules/webpack/bin/webpack.js --mode production --progress --config webpack/server.prod.config.js & node node_modules/webpack/bin/webpack.js --mode production --progress --config webpack/client.prod.config.js",
+    "lint": "node node_modules/eslint/bin/eslint.js .",
+    "dev": "node node_modules/webpack/bin/webpack.js --mode development --progress --watch --config webpack/client.dev.config.js & node node_modules/webpack/bin/webpack.js --mode development --progress --config webpack/server.dev.config.js --watch & node node_modules/nodemon/bin/nodemon.js dist/server.js"
   },
   "devDependencies": {
-    "nodemon": "^1.19.2"
+    "@babel/core": "^7.6.0",
+    "@babel/preset-env": "^7.5.5",
+    "@babel/preset-react": "^7.0.0",
+    "babel-loader": "^8.0.6",
+    "css-loader": "^3.2.0",
+    "eslint": "^6.2.2",
+    "eslint-config-airbnb": "^18.0.1",
+    "eslint-plugin-graphql": "^3.0.3",
+    "eslint-plugin-import": "^2.18.2",
+    "eslint-plugin-jsx-a11y": "^6.2.3",
+    "eslint-plugin-react": "^7.14.3",
+    "nodemon": "^1.19.2",
+    "style-loader": "^1.0.0",
+    "uglifyjs-webpack-plugin": "^2.2.0",
+    "webpack": "^4.39.3",
+    "webpack-cli": "^3.3.7",
+    "webpack-node-externals": "^1.7.2"
   }
 }

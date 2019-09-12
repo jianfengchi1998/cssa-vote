@@ -1,29 +1,31 @@
-import React from "react";
-import { Route, Switch } from "react-router-dom";
-import Screen from "./Screen";
-import User from "./User";
-import Backend from "./backend";
-import { Layout } from "antd";
-import "./App.css";
+import React from 'react'
+import { Route, Switch } from 'react-router-dom'
+import { Layout } from 'antd'
+import routes from './routes'
+import './App.css'
 
-const { Header, Footer, Sider, Content } = Layout;
+const {
+  Header, Footer, Sider, Content,
+} = Layout
 
 function App() {
   return (
     <Switch>
-      <Route exact path="/" component={User} />
-      <Route path="/screen" component={Screen} />
-      <Route path="/backend" component={Backend} />
+      {
+        routes.map((route, i) => (
+          <Route key={i} {...route} />
+        ))
+      }
       {/* when none of the above match, <NoMatch> will be rendered */}
       {/* <Route component={NoMatch} /> */}
     </Switch>
 
-    // <div className="App" >
-    //   <a className="App-body">
+  // <div className="App" >
+  //   <a className="App-body">
 
-    //   </a>
-    // </div>
-  );
+  //   </a>
+  // </div>
+  )
 }
 
-export default App;
+export default App

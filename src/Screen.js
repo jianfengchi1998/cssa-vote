@@ -1,18 +1,19 @@
-import { Row, Col } from "antd";
-import React, { useState, useEffect } from "react";
-import io from "socket.io-client";
-import SingerCard from "./components/card";
-import { backendURL } from "./constants";
-import shortid from "shortid";
-const axios = require("axios");
+import { Row, Col } from 'antd'
+import React, { useState, useEffect } from 'react'
+import io from 'socket.io-client'
+import shortid from 'shortid'
+import SingerCard from './components/card'
+import { backendURL } from './constants'
 
-const socket = io(backendURL);
+const axios = require('axios')
+
+const socket = io(backendURL)
 
 export default function Screen() {
-  const [singers, setSingers] = useState([]);
+  const [singers, setSingers] = useState([])
   const displayVote = () => {
-    //grab vote number from backend and display on card
-  };
+    // grab vote number from backend and display on card
+  }
 
   useEffect(() => {
     // socket.on("connect", function() {
@@ -23,22 +24,22 @@ export default function Screen() {
     // });
 
     axios
-      .get(backendURL + "/getAllSingers")
-      .then(function(response) {
+      .get(`${backendURL}/getAllSingers`)
+      .then((response) => {
         // handle success
-        console.log(response.data);
-        setSingers(response.data);
+        console.log(response.data)
+        setSingers(response.data)
       })
-      .catch(function(error) {
+      .catch((error) => {
         // handle error
-        console.log(error);
+        console.log(error)
       })
-      .finally(function() {
+      .finally(() => {
         // always executed
-      });
-  }, []);
+      })
+  }, [])
   return (
-    //Here, you use map function to map each values into the props.
+  // Here, you use map function to map each values into the props.
     /**
      * example
      * const singers = [
@@ -55,16 +56,16 @@ export default function Screen() {
      */
     <div>
       <Row type="flex" gutter={100} justify="center">
-        {singers.map(singer => (
+        {singers.map((singer) => (
           <Col span={5} key={shortid.generate()}>
             <SingerCard
               isLike={singer.isLike}
               voteClick={() => displayVote()}
               iconType="question-circle"
-            ></SingerCard>
+            />
           </Col>
         ))}
       </Row>
     </div>
-  );
+  )
 }
