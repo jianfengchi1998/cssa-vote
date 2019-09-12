@@ -1,5 +1,6 @@
 const singers = [
   {
+    id: 0,
     name: '村花',
     photo: 'https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png',
     description: '巴村 村花',
@@ -8,6 +9,7 @@ const singers = [
     isLike: false,
   },
   {
+    id: 1,
     name: '村花',
     photo: 'https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png',
     description: '巴村 村花',
@@ -16,6 +18,7 @@ const singers = [
     isLike: false,
   },
   {
+    id: 2,
     name: '村花',
     photo: 'https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png',
     description: '巴村 村花',
@@ -24,6 +27,7 @@ const singers = [
     isLike: false,
   },
   {
+    id: 3,
     name: '村花',
     photo: 'https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png',
     description: '巴村 村花',
@@ -32,6 +36,7 @@ const singers = [
     isLike: false,
   },
   {
+    id: 4,
     name: '村花',
     photo: 'https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png',
     description: '巴村 村花',
@@ -40,6 +45,7 @@ const singers = [
     isLike: false,
   },
   {
+    id: 5,
     name: '村花',
     photo: 'https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png',
     description: '巴村 村花',
@@ -48,6 +54,7 @@ const singers = [
     isLike: false,
   },
   {
+    id: 6,
     name: '村花',
     photo: 'https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png',
     description: '巴村 村花',
@@ -56,6 +63,7 @@ const singers = [
     isLike: false,
   },
   {
+    id: 7,
     name: '村花',
     photo: 'https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png',
     description: '巴村 村花',

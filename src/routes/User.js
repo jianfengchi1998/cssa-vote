@@ -1,5 +1,5 @@
 import React, { useState, Component } from 'react'
-import SingerCard from './components/card'
+import SingerCard from '../components/card'
 
 export default function User() {
   const [isLike, setLike] = useState(false)
