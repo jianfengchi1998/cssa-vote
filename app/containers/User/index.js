@@ -17,16 +17,20 @@ import SingerCard from '../../components/Card';
 import reducer from './reducer';
 import saga from './saga';
 import { makeSelectSingerInUser, makeSelectAllowVote } from './selectors';
-import { getSinger, setLike, setDisLike } from './actions';
+import { getSinger, setLike, setDisLike, getCurrentSinger } from './actions';
 const io = require('socket.io-client');
+const axios = require('axios').default;
+var jwt = require('jsonwebtoken');
 
 const bsu = io('/BackStage-User');
 
 export function User({
   CurrentSinger,
+  getSingerlocal,
   getCurrentSinger,
   toggleLikethis,
   toggleDisLikethis,
+  getCurrentSing,
 }) {
   useInjectReducer({ key: 'user', reducer });
   useInjectSaga({ key: 'user', saga });
@@ -35,14 +39,26 @@ export function User({
   const [isLike, toggleLike] = useState(false);
   const [allowVote, toggleAllowVote] = useState(false);
   useEffect(() => {
-    getCurrentSinger(localStorage.getItem('name'));
-  }, []);
+    if (!localStorage.getItem('token')) {
+      jwt.sign(
+        'valid',
+        'cssa',
+        { algorithm: 'RS256', expiresIn: '1d' },
+        (err, token) => {
+          localStorage.setItem('token', token);
+        },
+      );
+    }
+    getSingerlocal(localStorage.getItem('name'));
+    // getCurrentSing();
+  }, [getSingerlocal]);
   bsu.on('connect', socket => {
     console.log('BackStage-User connected');
+    bsu.emit('getCurrentSinger');
   });
   bsu.on('fetch current singer', name => {
     toggleLike(false);
-    getCurrentSinger(name);
+    getSingerlocal(name);
     localStorage.setItem('name', name);
     setName(name);
   });
@@ -54,7 +70,6 @@ export function User({
     return isLike ? toggleDisLikethis(singerName) : toggleLikethis(singerName);
   };
 
-  console.log(allowVote);
   return (
     <SingerCard
       {...CurrentSinger}
@@ -73,8 +88,11 @@ const mapStateToProps = createStructuredSelector({
 
 function mapDispatchToProps(dispatch) {
   return {
-    getCurrentSinger: name => {
+    getSingerlocal: name => {
       dispatch(getSinger(name));
+    },
+    getCurrentSing: () => {
+      dispatch(getCurrentSinger());
     },
     toggleLikethis: name => {
       dispatch(setLike(name));

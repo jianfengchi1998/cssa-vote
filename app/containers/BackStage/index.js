@@ -4,7 +4,7 @@
  *
  */
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Row, Col, Divider, Select, Switch, InputNumber } from 'antd';
 
 import PropTypes from 'prop-types';
@@ -25,6 +25,7 @@ import { startVote } from '../User/actions';
 const io = require('socket.io-client');
 const socket = io(`${window.location.hostname}:3000`);
 const bsu = io('/BackStage-User');
+const bss = io('/BackStage-Screen');
 
 const { Option } = Select;
 
@@ -37,15 +38,26 @@ export function BackStage({
 }) {
   useInjectReducer({ key: 'backStage', reducer });
   useInjectSaga({ key: 'backStage', saga });
-
+  const [numAud, setNumAud] = useState(0);
   useEffect(() => {
     bsu.on('connect', socket => {
       console.log('BackStage-User connected');
     });
+    bss.on('reset', () => {
+      onChangeTopResult(false);
+    });
     socket.on('connect', () => {
       getAllSingers();
     });
-  }, []);
+
+    socket.on('numAudience', num => {
+      console.log(num);
+      setNumAud(num);
+    });
+  }, [numAud, setNumAud]);
+  setInterval(() => {
+    socket.emit('getNumAudience');
+  }, 5000);
   // bsu.on('connect', socket => {
   //   console.log('BackStage-User connected');
   // });
@@ -54,7 +66,7 @@ export function BackStage({
   // });
   const handleChange = value => {
     console.log(value);
-    bsu.emit('getCurrentSinger', value);
+    bsu.emit('SendToUser', value);
     // getSinger(value);
   };
   function onChange(checked) {
@@ -63,10 +75,11 @@ export function BackStage({
   }
   function onChangeTopResult(checked) {
     console.log(`switch to ${checked}`);
-    // bsu.emit('allowVote', checked);
+    bss.emit('showResult', checked);
   }
   function onChangeTopN(value) {
     console.log('changed', value);
+    bss.emit('getTopN', value);
   }
   return (
     <div>
@@ -99,6 +112,10 @@ export function BackStage({
         <h1>Screen Control</h1>
       </Row>
       <Row>
+        <h2>Top N Singer</h2>
+        <InputNumber min={1} max={8} onChange={onChangeTopN} />
+      </Row>
+      <Row>
         <h2>Result Switch</h2>
         <Switch
           checkedChildren="开"
@@ -106,9 +123,10 @@ export function BackStage({
           onChange={onChangeTopResult}
         />
       </Row>
+      <Divider />
       <Row>
-        <h2>Top N Singer</h2>
-        <InputNumber min={1} max={8} onChange={onChangeTopN} />
+        <h1>Number of Connection</h1>
+        <h3>{numAud}</h3>
       </Row>
     </div>
   );

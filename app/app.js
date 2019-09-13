@@ -15,7 +15,8 @@ import { Provider } from 'react-redux';
 import { ConnectedRouter } from 'connected-react-router';
 import history from 'utils/history';
 import 'sanitize.css/sanitize.css';
-
+// import '/node_modules/react-grid-layout/css/styles.css';
+// import '/node_modules/react-resizable/css/styles.css';
 // Import root app
 import App from 'containers/App';
 

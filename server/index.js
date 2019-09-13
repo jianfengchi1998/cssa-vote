@@ -26,6 +26,7 @@ const io = require('socket.io')(http);
 
 app.use(cors());
 app.use(bodyParser.json());
+app.use(express.static('public'));
 
 // If you need a backend, e.g. an API, add your custom backend-specific middleware here
 // app.use('/api', myApi);
@@ -36,11 +37,33 @@ app.post('/getSinger', (req, res) => {
   })
     .then(singer => {
       if (singer) {
-        return res.status(200).json(singer.dataValues);
+        singer
+          .update(
+            {
+              currentSinger: true,
+            },
+            { where: { _id: singer.id } },
+          )
+          .then(() => {
+            return res.status(200).json(singer);
+          });
       }
     })
     .catch(err => console.log(err));
 });
+
+// app.post('/getCurrentSinger', (req, res) => {
+//   Singer.findOne({
+//     where: { currentSinger: true },
+//     attributes: { exclude: ['id', 'createdAt', 'updatedAt'] },
+//   })
+//     .then(singer => {
+//       if (singer) {
+//         return res.status(200).json(singer);
+//       }
+//     })
+//     .catch(err => console.log(err));
+// });
 
 app.get('/getAllSingers', (req, res) => {
   Singer.findAll().then(singers => {
@@ -51,7 +74,6 @@ app.get('/getAllSingers', (req, res) => {
 });
 app.post('/getTopN', (req, res) => {
   Singer.findAll({
-    where: { name: req.body.listName },
     order: [['numVote', 'DESC']],
     limit: req.body.n,
   }).then(singers => {
@@ -167,8 +189,23 @@ app.get('*.js', (req, res, next) => {
 const bsu = io.of('/BackStage-User');
 bsu.on('connection', socket => {
   console.log('BackStage-User connected');
-  socket.on('getCurrentSinger', name => {
+
+  socket.on('SendToUser', name => {
     socket.broadcast.emit('fetch current singer', name);
+    // Singer.findOne({
+    //   where: { name },
+    //   attributes: { exclude: ['id', 'createdAt', 'updatedAt'] },
+    // })
+    //   .then(singer => {
+    //     if (singer) {
+    //       Singer.update(
+    //         { currentSinger: true },
+    //         { where: { name: singer.name } },
+    //       );
+    //       socket.broadcast.emit('fetch current singer', singer.name);
+    //     }
+    //   })
+    //   .catch(err => console.log(err));
   });
   socket.on('allowVote', isAllow => {
     socket.broadcast.emit('toggleAllow', isAllow);
@@ -181,10 +218,16 @@ bss.on('connection', socket => {
   socket.on('showResult', bool => {
     socket.broadcast.emit('toggleResult', bool);
   });
+  socket.on('getTopN', number => {
+    socket.broadcast.emit('topN', number);
+  });
 });
+
 io.on('connect', socket => {
   console.log('a user connected');
-
+  socket.on('getNumAudience', () => {
+    socket.emit('numAudience', io.engine.clientsCount);
+  });
   socket.on('disconnect', function() {
     console.log('user disconnected');
   });

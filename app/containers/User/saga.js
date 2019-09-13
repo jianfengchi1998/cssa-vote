@@ -1,8 +1,13 @@
 import { takeLatest, call, put, select } from 'redux-saga/effects';
 import request from '../../utils/request';
 import { API_URL } from '../../constants';
-import { GET_SINGER, SET_LIKE, SET_DISLIKE } from './constants';
-import { setSingerInUser, getSingerFail } from './actions';
+import {
+  GET_SINGER,
+  SET_LIKE,
+  SET_DISLIKE,
+  GET_CURRENT_SINGER,
+} from './constants';
+import { setSingerInUser, getSingerFail, getCurrentSinger } from './actions';
 const options = data => ({
   method: 'POST',
   headers: {
@@ -17,6 +22,21 @@ export function* requestSinger(action) {
     const response = yield call(
       request,
       `${API_URL}/getSinger`,
+      options({ name: action.payload }),
+    );
+
+    yield put(setSingerInUser(response));
+    // yield put(getCurrentSinger());
+  } catch (err) {
+    yield put(getSingerFail());
+    console.log(err);
+  }
+}
+export function* requestCurrentSinger(action) {
+  try {
+    const response = yield call(
+      request,
+      `${API_URL}/getCurrentSinger`,
       options({ name: action.payload }),
     );
 
@@ -56,6 +76,7 @@ export function* toggleDisLike(action) {
 export default function* userSaga() {
   // See example in containers/HomePage/saga.js
   yield takeLatest(GET_SINGER, requestSinger);
+  // yield takeLatest(GET_CURRENT_SINGER, requestCurrentSinger);
   yield takeLatest(SET_LIKE, toggleLike);
   yield takeLatest(SET_DISLIKE, toggleDisLike);
 }

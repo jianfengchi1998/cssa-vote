@@ -6,6 +6,7 @@
 
 import {
   GET_SINGER,
+  GET_CURRENT_SINGER,
   GET_SINGER_FAIL,
   SET_SINGER_IN_USER,
   SET_LIKE,
@@ -17,6 +18,11 @@ export function getSinger(data) {
   return {
     type: GET_SINGER,
     payload: data,
+  };
+}
+export function getCurrentSinger() {
+  return {
+    type: GET_CURRENT_SINGER,
   };
 }
 export function getSingerFail() {

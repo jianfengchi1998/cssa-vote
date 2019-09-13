@@ -5,6 +5,7 @@
  */
 
 export const GET_SINGER = 'app/User/GET_SINGER';
+export const GET_CURRENT_SINGER = 'app/User/GET_SINGER';
 export const GET_SINGER_FAIL = 'app/User/GET_SINGER_FAIL';
 export const SET_SINGER_IN_USER = 'app/User/SET_SINGER_IN_USER';
 export const SET_LIKE = 'app/User/SET_LIKE';
