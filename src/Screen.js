@@ -1,12 +1,12 @@
 import { Row, Col } from "antd";
 import React, { useState, useEffect } from "react";
-import io from "socket.io-client";
+// import io from "socket.io-client";
 import SingerCard from "./components/card";
 import { backendURL } from "./constants";
 import shortid from "shortid";
 const axios = require("axios");
 
-const socket = io(backendURL);
+// const socket = io(backendURL);
 
 export default function Screen() {
   const [singers, setSingers] = useState([]);
@@ -21,7 +21,6 @@ export default function Screen() {
     //     console.log(data);
     //   });
     // });
-
     axios
       .get(backendURL + "/getAllSingers")
       .then(function(response) {
@@ -58,6 +57,8 @@ export default function Screen() {
         {singers.map(singer => (
           <Col span={5} key={shortid.generate()}>
             <SingerCard
+              name={singer.name}
+              photo={singer.photo}
               isLike={singer.isLike}
               voteClick={() => displayVote()}
               iconType="question-circle"

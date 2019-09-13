@@ -14,10 +14,13 @@ export default function SingerCard({
   voteClick,
   iconType
 }) {
+  console.log("../photos/王川.png");
   return (
     <Card
       style={cardStyle}
-      cover={<img style={{ height: "50%" }} alt="geshou" src={photo} />}
+      cover={
+        <img style={{ height: "50%" }} alt="geshou" src={require(photo)} />
+      }
     >
       <Meta title={name} description={description} />
       <p>{songName}</p>
@@ -39,4 +42,3 @@ SingerCard.defaultProps = {
   cardStyle: { width: "100%", textAlign: "center" },
   isLike: false
 };
-  
