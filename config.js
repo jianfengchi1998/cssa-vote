@@ -3,7 +3,7 @@ export const backendURL = 'http://localhost:5000'
 export const singers = [
   {
     id: '0',
-    name: '村花',
+    name: '村花0',
     photo: 'https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png',
     description: '巴村 村花',
     songName: '山歌',
@@ -12,7 +12,7 @@ export const singers = [
   },
   {
     id: '1',
-    name: '村花',
+    name: '村花1',
     photo: 'https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png',
     description: '巴村 村花',
     songName: '山歌',
@@ -21,7 +21,7 @@ export const singers = [
   },
   {
     id: '2',
-    name: '村花',
+    name: '村花2',
     photo: 'https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png',
     description: '巴村 村花',
     songName: '山歌',
@@ -30,7 +30,7 @@ export const singers = [
   },
   {
     id: '3',
-    name: '村花',
+    name: '村花3',
     photo: 'https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png',
     description: '巴村 村花',
     songName: '山歌',
@@ -39,7 +39,7 @@ export const singers = [
   },
   {
     id: '4',
-    name: '村花',
+    name: '村花4',
     photo: 'https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png',
     description: '巴村 村花',
     songName: '山歌',
@@ -48,7 +48,7 @@ export const singers = [
   },
   {
     id: '5',
-    name: '村花',
+    name: '村花5',
     photo: 'https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png',
     description: '巴村 村花',
     songName: '山歌',
@@ -57,7 +57,7 @@ export const singers = [
   },
   {
     id: '6',
-    name: '村花',
+    name: '村花6',
     photo: 'https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png',
     description: '巴村 村花',
     songName: '山歌',
@@ -66,7 +66,7 @@ export const singers = [
   },
   {
     id: '7',
-    name: '村花',
+    name: '村花7',
     photo: 'https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png',
     description: '巴村 村花',
     songName: '山歌',

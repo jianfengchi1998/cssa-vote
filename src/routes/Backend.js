@@ -26,12 +26,12 @@ export default memo(() => {
         >
           {
             singers.map((singer, i) => (
-              <option
+              <Select.Option
                 key={i}
                 value={singer.id}
               >
                 {singer.name}
-              </option>
+              </Select.Option>
             ))
           }
         </Select>
@@ -59,18 +59,18 @@ export default memo(() => {
           style={{ width: '100%' }}
           value={state.singer}
           onChange={async (e) => {
-            const newState = await postServerData('/setSinger', { singer: e.target.value })
+            const newState = await postServerData('/setSinger', { singer: e })
             dispatch(setState(newState))
           }}
         >
           {
             state.singers.map((singer, i) => (
-              <option
+              <Select.Option
                 key={i}
                 value={singer.id}
               >
                 {singer.name}
-              </option>
+              </Select.Option>
             ))
           }
         </Select>

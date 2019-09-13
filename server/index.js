@@ -8,6 +8,7 @@ import {
   setSingers,
   setSinger,
   setIsVote,
+  addNumVote,
 } from '../database/data'
 
 const express = require('express')
@@ -20,8 +21,6 @@ const http = require('http').createServer(app)
 
 app.use(bodyParser.json())
 app.use(express.static('public'))
-
-// app.get("/getAllSingers", (req, res) => res.send(singers));
 
 app.get('/getState', (req, res) => {
   res.send(state)
@@ -39,6 +38,11 @@ app.post('/setSinger', (req, res) => {
 
 app.post('/setIsVote', (req, res) => {
   setIsVote(req.body.isVote)
+  res.send(state)
+})
+
+app.post('/vote', (req, res) => {
+  addNumVote()
   res.send(state)
 })
 

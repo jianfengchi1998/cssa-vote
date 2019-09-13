@@ -1,3 +1,4 @@
+import { getSingerIndex } from '../utils'
 import { singers } from '../config'
 
 export const state = {
@@ -9,7 +10,11 @@ export const state = {
 export const setSingers = (singerIds) => {
   state.singers = singers.filter((singer) => (
     singerIds.includes(singer.id)
-  ))
+  )).map((singer) => ({
+    ...singer,
+    isVote: false,
+    numVote: 0,
+  }))
 
   if (singerIds.length === 0) {
     state.singer = ''
@@ -25,4 +30,15 @@ export const setSinger = (singer) => {
 
 export const setIsVote = (isVote) => {
   state.isVote = isVote
+
+  if (isVote) {
+    const index = getSingerIndex(state.singers, state.singer)
+    state.singers[index].isVote = true
+  }
+}
+
+export const addNumVote = () => {
+  console.log('aaa')
+  const index = getSingerIndex(state.singers, state.singer)
+  state.singers[index].numVote += 1
 }
