@@ -49,7 +49,7 @@ export default memo(() => {
           onClick={async () => {
             const newState = await postServerData('/setSingers', [])
             dispatch(setState(newState))
-          }}      
+          }}
         >
           stop
         </Button>

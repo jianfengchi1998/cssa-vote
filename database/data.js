@@ -38,7 +38,7 @@ export const setIsVote = (isVote) => {
 }
 
 export const addNumVote = () => {
-  console.log('aaa')
   const index = getSingerIndex(state.singers, state.singer)
   state.singers[index].numVote += 1
+  state.singers[index].isVote = true
 }

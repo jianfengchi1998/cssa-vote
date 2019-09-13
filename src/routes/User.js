@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useContext } from 'react'
+import React, { useMemo, useContext } from 'react'
 import { Context } from '../reducer'
 import { Card, Icon } from 'antd'
 import { setState } from '../actions'
@@ -6,7 +6,6 @@ import { postServerData } from '../../utils'
 
 export default function User() {
   const { state, dispatch } = useContext(Context)
-  const [disabled, setDisabled] = useState(false)
 
   const singer = useMemo(() => {
     if (state.singers.length === 0) {
@@ -20,12 +19,10 @@ export default function User() {
 
   const voteId = localStorage.getItem('cssa-vote-id')
   if (voteId === state.singer) {
-    setDisabled(true)
-
     return <h4>You have vote one time. Please wait...</h4>
   }
 
-  if (!singer) {
+  if (!singer || !state.isVote) {
     return <h4>Voting does not start. Please wait...</h4>
   }
 
@@ -45,11 +42,9 @@ export default function User() {
         <Icon
           key="like"
           type="like"
-          // disabled={disabled}
           onClick={async () => {
             const newState = await postServerData('/vote')
             localStorage.setItem('cssa-vote-id', state.singer)
-            // setDisabled(true)
             dispatch(setState(newState))
           }}
         />,

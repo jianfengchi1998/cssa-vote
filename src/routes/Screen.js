@@ -1,9 +1,10 @@
-import { Row, Col } from 'antd'
-import React, { memo, useContext } from 'react'
+import { Row, Col, Card } from 'antd'
+import React, { memo, useMemo, useContext } from 'react'
 // import io from 'socket.io-client'
 
 import { Context } from '../reducer'
-import SingerCard from '../components/card'
+import { chunk } from '../../utils'
+// import SingerCard from '../components/card'
 
 // import { backendURL } from '../../config'
 
@@ -13,40 +14,46 @@ import SingerCard from '../components/card'
 
 export default memo(() => {
   const { state } = useContext(Context)
-  // const [singers, setSingers] = useState([])
 
-  const displayVote = () => {
-    // grab vote number from backend and display on card
-  }
+  const singers = useMemo(() => {
+    const res = state.singers.filter((s) => (
+      s.isVote
+    )).sort((a, b) => {
+      if (a.numVote >= b.numVote) {
+        return 1
+      }
+  
+      return -1
+    })
+
+    return chunk(res, 3)
+  }, [state.singers])
 
   return (
-  // Here, you use map function to map each values into the props.
-    /**
-     * example
-     * const singers = [
-     * {name: cunhua, },
-     * {name: cunhua, },
-     * {name: cunhua, },
-     * ]
-     *
-     * singers.map(singer =>{
-     *     <SingerCard name=singer.name islike=singer.isLike  />
-     * })
-     *
-     *
-     */
     <>
-      <Row type="flex" gutter={100} justify="center">
-        {state.singers.map((singer, i) => (
-          <Col span={5} key={i}>
-            <SingerCard
-              isLike={singer.isLike}
-              voteClick={() => displayVote()}
-              iconType="question-circle"
-            />
-          </Col>
-        ))}
-      </Row>
+      {
+        singers.map((row, i) => (
+          <Row key={i} type="flex" gutter={100} justify="center">
+            {row.map((singer, j) => (
+              <Col key={j} span={5}>
+                <Card
+                  cover={(
+                    <img
+                      alt={singer.name}
+                      src={singer.photo}
+                    />
+                  )}            
+                >
+                  <Card.Meta
+                    title={singer.name}
+                    description={singer.numVote}
+                  />
+                </Card>
+              </Col>
+            ))}
+          </Row>
+        ))
+      }
     </>
   )
 })
