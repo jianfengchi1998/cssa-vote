@@ -125,8 +125,8 @@ const singers = [
     numVote: 0,
   },
   {
-    name: '喜羊羊与灰太狼',
-    photo: '../../images/喜羊羊与灰太狼.png',
+    name: 'Rua',
+    photo: '../../images/Rua.png',
     description: '巴村 村花',
     songName: '山歌',
     judges: 0,

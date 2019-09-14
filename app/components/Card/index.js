@@ -21,7 +21,7 @@ import 王川 from '../../images/王川.jpg';
 import 王梓力 from '../../images/王梓力.jpg';
 import 陈凤 from '../../images/陈凤.jpg';
 import Iris from '../../images/Iris.jpg';
-import 喜羊羊与灰太狼 from '../../images/喜羊羊与灰太狼.jpg';
+import Rua from '../../images/Rua.jpg';
 // import PropTypes from 'prop-types';
 // import styled from 'styled-components';
 const { Meta } = Card;
@@ -40,6 +40,7 @@ function SingerCard({
   songStyle,
   Componp,
   judges,
+  totalVote,
 }) {
   const images = {
     Laura,
@@ -49,7 +50,7 @@ function SingerCard({
     王梓力,
     陈凤,
     Iris,
-    喜羊羊与灰太狼,
+    Rua,
   };
   return (
     <>
@@ -57,11 +58,11 @@ function SingerCard({
         <Row>
           <h1 style={nameStyle}>{name}</h1>
         </Row>
-        <Row>
+        {/* <Row>
           <h2 style={songStyle}>{songName}</h2>
-        </Row>
+        </Row> */}
         {/* <h1>{numVote}</h1> */}
-        {Componp ? Componp(judges, numVote) : null}
+        {Componp ? Componp(judges, numVote, totalVote) : null}
         <Icon
           style={{ fontSize: '50px', color: 'red' }}
           theme={isLike ? 'filled' : 'outlined'}
