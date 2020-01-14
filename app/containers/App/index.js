@@ -24,7 +24,7 @@ export default function App() {
         <Route exact path="/" component={User} />
         <Route exact path="/screen" component={Screen} />
         <Route exact path="/back" component={BackStage} />
-        <Route component={NotFoundPage} />
+        {/*<Route component={NotFoundPage} />*/}
       </Switch>
       <GlobalStyle />
     </div>

@@ -17,7 +17,7 @@ import { useInjectSaga } from 'utils/injectSaga';
 import { useInjectReducer } from 'utils/injectReducer';
 import makeSelectScreen, { makeSelectTopN } from './selectors';
 import SingerCard from '../../components/Card';
-import qr from '../../images/qr-code.jpg';
+// import qr from '../../images/qrcode.jpg';
 import reducer from './reducer';
 import saga from './saga';
 import { getTopN } from './actions';
@@ -38,10 +38,15 @@ const QRCover = (
   >
     <div style={{ width: '100%', height: '100%' }}>
       <Row type="flex" justify="space-around" align="middle">
-        <h1>第三届巴村好声音</h1>
+        <h1>https://lsucssa.org </h1>
       </Row>
       <Row type="flex" justify="space-around" align="middle">
-        <img width="50%" height="50%" src={qr} alt="" />
+        <img
+          width="10%"
+          height="10%"
+          src="https://qrcode.tec-it.com/API/QRCode?data=http%3a%2f%2f167.96.3.54%3a3000&backcolor=%23ffffff"
+          alt=""
+        />
       </Row>
     </div>
   </div>
@@ -73,41 +78,40 @@ export function Screen({ getTopNSinger, TopNSingers }) {
   }, 5000);
   // TopNSingers.map( singers)
   // const newTopSinger = ;
-  const newTopSinger = TopNSingers.map(singer => {
-    return {
-      ...TopNSingers,
-      totalVote: singer.judges * 0.25 + (numAud - singer.adVote) / numAud,
-    };
-  });
-  console.log(newTopSinger);
-  console.log(numAud);
-  const Judges = (judges, adVote, totalVote) => (
-    <Row type="flex" justify="space-between">
-      <Col>
-        <h3>评委票数</h3>
-        <h2>{judges}</h2>
-      </Col>
-      <Col>
-        <h3>总票数</h3>
-        <h2>{totalVote}</h2>
-      </Col>
-      <Col>
-        <h3>观众票数</h3>
-        <h2>{adVote}</h2>
-      </Col>
-    </Row>
-  );
+  // const newTopSinger = TopNSingers.map(singer => {
+  //   return {
+  //     ...TopNSingers,
+  //     totalVote: singer.judges * 0.25 + (numAud - singer.adVote) / numAud,
+  //   };
+  // });
+  // console.log(newTopSinger);
+  console.log(TopNSingers);
   return showResult ? (
     <div>
-      <Row type="flex" gutter={40} justify="space-around">
-        {newTopSinger.map(singer => (
+      <Row type="flex" gutter={40} justify="space-between">
+        {TopNSingers.map(singer => (
           <Col>
             <SingerCard
-              {...singer}
-              cardStyle={{ width: '85%', textAlign: 'center' }}
+              data={singer}
+              cardStyle={{ width: '75%', textAlign: 'center' }}
               nameStyle={{ fontSize: '40px' }}
               songStyle={{ fontSize: '20px' }}
-              Componp={Judges(singer.judges, singer.adVote, singer.totalVote)}
+              Componp={
+                <Row type="flex" justify="space-between">
+                  <Col>
+                    <h3>评委票数</h3>
+                    <h2>{singer.judges}</h2>
+                  </Col>
+                  <Col>
+                    <h3>总票数</h3>
+                    <h2>{singer.totalVote}</h2>
+                  </Col>
+                  <Col>
+                    <h3>观众票数</h3>
+                    <h2>{singer.numVote}</h2>
+                  </Col>
+                </Row>
+              }
             />
           </Col>
         ))}

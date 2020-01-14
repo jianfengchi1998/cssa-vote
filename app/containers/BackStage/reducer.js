@@ -19,7 +19,6 @@ const backStageReducer = (state = initialState, action) =>
       case SET_ALL_SINGERS:
         draft.allSingers = action.payload;
         break;
-      
     }
   });
 

@@ -1,7 +1,10 @@
 const Sequelize = require('sequelize');
+const data = require('./data.js');
+
 const sequelize = new Sequelize({
   dialect: 'sqlite',
   storage: './database.sqlite',
+  logging: false,
 });
 sequelize
   .authenticate()
@@ -42,10 +45,6 @@ const Singer = sequelize.define(
     },
     currentSinger: {
       type: Sequelize.BOOLEAN,
-      allowNull: true,
-    },
-    totalVote: {
-      type: Sequelize.NUMBER,
       allowNull: false,
     },
   },
@@ -54,94 +53,16 @@ const Singer = sequelize.define(
   },
 );
 
-const singers = [
-  {
-    name: '王川',
-    photo: '../../images/王川.png',
-    description: '巴村 村花',
-    songName: '山歌',
-    judges: 0,
-    totalVote: 0,
-    numVote: 0,
-  },
-  {
-    name: '陈凤',
-    photo: '../../images/陈凤.png',
-    description: '巴村 村花',
-    songName: '山歌',
-    judges: 0,
-    totalVote: 0,
-
-    numVote: 0,
-  },
-  {
-    name: 'Iris',
-    photo: '../../images/Iris.png',
-    description: '巴村 村花',
-    songName: '山歌',
-    judges: 0,
-    totalVote: 0,
-
-    numVote: 0,
-  },
-  {
-    name: '王梓力',
-    photo: '../../images/王梓力.png',
-    description: '巴村 村花',
-    songName: '山歌',
-    judges: 0,
-    totalVote: 0,
-
-    numVote: 0,
-  },
-  {
-    name: '李曾帅',
-    photo: '../../images/李曾帅.png',
-    description: '巴村 村花',
-    songName: '山歌',
-    judges: 0,
-    totalVote: 0,
-
-    numVote: 0,
-  },
-  {
-    name: '张大江',
-    photo: '../../images/张大江.png',
-    description: '巴村 村花',
-    songName: '山歌',
-    judges: 0,
-    totalVote: 0,
-
-    numVote: 0,
-  },
-  {
-    name: 'Laura',
-    photo: '../../images/Laura.png',
-    description: '巴村 村花',
-    songName: '山歌',
-    judges: 0,
-    totalVote: 0,
-
-    numVote: 0,
-  },
-  {
-    name: 'Rua',
-    photo: '../../images/Rua.png',
-    description: '巴村 村花',
-    songName: '山歌',
-    judges: 0,
-    totalVote: 0,
-
-    numVote: 0,
-  },
-];
-
 const SongList = sequelize.define('songs', {
   // attributes
   singer: {
     type: Sequelize.STRING,
     allowNull: false,
     primaryKey: true,
+  },
+  photo: {
+    type: Sequelize.STRING,
+    allowNull: false,
   },
   songName1: {
     type: Sequelize.STRING,
@@ -199,16 +120,16 @@ const songlist = [
   },
 ];
 
-Singer.sync({ force: true }).then(() => {
-  // Now the `users` table in the database corresponds to the model definition
-  singers.map(singer => {
-    return Singer.create(singer);
-  });
-});
-SongList.sync({ force: true }).then(() => {
-  // Now the `users` table in the database corresponds to the model definition
-  songlist.map(singer => {
-    return SongList.create(singer);
-  });
-});
+// Singer.sync({ force: true }).then(() => {
+//   // Now the `users` table in the database corresponds to the model definition
+//   data.map(singer => {
+//     return Singer.create(singer);
+//   });
+// });
+// SongList.sync({ force: true }).then(() => {
+//   // Now the `users` table in the database corresponds to the model definition
+//   songlist.map(singer => {
+//     return SongList.create(singer);
+//   });
+// });
 module.exports = { sequelize, Singer, SongList };

@@ -18,16 +18,18 @@ import makeSelectBackStage, {
   makeSelectAllSingers,
   makeSelectSingerInUser,
 } from './selectors';
+
 import reducer from './reducer';
 import saga from './saga';
 import { startAllSingers, setSingerInUser, getSinger } from './actions';
 import { startVote } from '../User/actions';
 const io = require('socket.io-client');
-const socket = io(`${window.location.hostname}:3000`);
+const socket = io(`${window.location.hostname}`);
 const bsu = io('/BackStage-User');
 const bss = io('/BackStage-Screen');
 
 const { Option } = Select;
+const shortid = require('shortid');
 
 export function BackStage({
   allSingers,
@@ -51,7 +53,6 @@ export function BackStage({
     });
 
     socket.on('numAudience', num => {
-      console.log(num);
       setNumAud(num);
     });
   }, [numAud, setNumAud]);
@@ -84,23 +85,25 @@ export function BackStage({
   return (
     <div>
       <Row>
-        <h1>User Screen Control</h1>
+        <h1>用户控制面板</h1>
       </Row>
       <Row>
-        <h2>Project to User</h2>
+        <h2>投射给用户</h2>
         <Select
           defaultValue=""
           allowClear
           style={{ width: 300 }}
           onChange={handleChange}
         >
-          {allSingers.map(singer => {
-            return <Option value={singer.name}>{singer.name}</Option>;
-          })}
+          {allSingers.map(singer => (
+            <Option key={shortid.generate()} value={singer.name}>
+              {singer.name}
+            </Option>
+          ))}
         </Select>
       </Row>
       <Row>
-        <h2>Vote Switch</h2>
+        <h2>投票开关</h2>
         <Switch
           checkedChildren="开"
           unCheckedChildren="关"
@@ -109,14 +112,14 @@ export function BackStage({
       </Row>
       <Divider />
       <Row>
-        <h1>Screen Control</h1>
+        <h1>大屏幕控制</h1>
       </Row>
       <Row>
-        <h2>Top N Singer</h2>
+        <h2>前N名表演者</h2>
         <InputNumber min={1} max={8} onChange={onChangeTopN} />
       </Row>
       <Row>
-        <h2>Result Switch</h2>
+        <h2>结果开关</h2>
         <Switch
           checkedChildren="开"
           unCheckedChildren="关"
@@ -125,7 +128,7 @@ export function BackStage({
       </Row>
       <Divider />
       <Row>
-        <h1>Number of Connection</h1>
+        <h1>连接数</h1>
         <h3>{numAud}</h3>
       </Row>
     </div>

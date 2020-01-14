@@ -2,7 +2,7 @@
 const express = require('express');
 const logger = require('./logger');
 const Sequelize = require('sequelize');
-
+const path = require('path');
 const bodyParser = require('body-parser');
 
 const { sequelize, Singer } = require('./db');
@@ -27,6 +27,22 @@ const io = require('socket.io')(http);
 app.use(cors());
 app.use(bodyParser.json());
 app.use(express.static('public'));
+// setup(app, {
+//   outputPath: resolve(process.cwd(), 'build'),
+//   publicPath: '/',
+// });
+// app.get(
+//   '/.well-known/pki-validation/2F35B0F915909EF74251D661221658FD.txt',
+//   function(req, res) {
+//     res.sendFile('./2F35B0F915909EF74251D661221658FD.txt', {
+//       root: __dirname,
+//     });
+//   },
+// );
+
+// app.get('/', function(req, res) {
+//   res.render(path.join(process.cwd(), '/build/index.html'));
+// });
 
 // If you need a backend, e.g. an API, add your custom backend-specific middleware here
 // app.use('/api', myApi);
@@ -46,24 +62,27 @@ app.post('/getSinger', (req, res) => {
           )
           .then(() => {
             return res.status(200).json(singer);
+          })
+          .catch(() => {
+            return res.status(404);
           });
       }
     })
     .catch(err => console.log(err));
 });
 
-// app.post('/getCurrentSinger', (req, res) => {
-//   Singer.findOne({
-//     where: { currentSinger: true },
-//     attributes: { exclude: ['id', 'createdAt', 'updatedAt'] },
-//   })
-//     .then(singer => {
-//       if (singer) {
-//         return res.status(200).json(singer);
-//       }
-//     })
-//     .catch(err => console.log(err));
-// });
+app.post('/getCurrentSinger', (req, res) => {
+  Singer.findOne({
+    where: { currentSinger: true },
+    attributes: { exclude: ['id', 'createdAt', 'updatedAt'] },
+  })
+    .then(singer => {
+      if (singer) {
+        return res.status(200).json(singer);
+      }
+    })
+    .catch(err => console.log(err));
+});
 
 app.get('/getAllSingers', (req, res) => {
   Singer.findAll().then(singers => {
@@ -188,24 +207,46 @@ app.get('*.js', (req, res, next) => {
 
 const bsu = io.of('/BackStage-User');
 bsu.on('connection', socket => {
-  console.log('BackStage-User connected');
-
+  console.log('User connected');
   socket.on('SendToUser', name => {
-    socket.broadcast.emit('fetch current singer', name);
-    // Singer.findOne({
-    //   where: { name },
-    //   attributes: { exclude: ['id', 'createdAt', 'updatedAt'] },
-    // })
-    //   .then(singer => {
-    //     if (singer) {
-    //       Singer.update(
-    //         { currentSinger: true },
-    //         { where: { name: singer.name } },
-    //       );
-    //       socket.broadcast.emit('fetch current singer', singer.name);
-    //     }
-    //   })
-    //   .catch(err => console.log(err));
+    Singer.findOne({
+      where: { name },
+      attributes: { exclude: ['id', 'createdAt', 'updatedAt'] },
+    })
+      .then(singer => {
+        if (singer) {
+          singer
+            .update(
+              {
+                currentSinger: true,
+              },
+              { where: { _id: singer.id } },
+            )
+            .then(() => {
+              socket.broadcast.emit('fetch current singer', singer);
+            })
+            .catch(err => {
+              console.log(err);
+            });
+        }
+      })
+      .catch(err => console.log(err));
+  });
+  socket.on('Get current performer', () => {
+    console.log('first time enter');
+    Singer.findOne({
+      where: { currentSinger: true },
+      attributes: { exclude: ['id', 'createdAt', 'updatedAt'] },
+    })
+      .then(singer => {
+        if (singer) {
+          socket.emit('Current performer', singer);
+        }
+      })
+      .catch(err => console.log(err));
+  });
+  socket.on('saveBullet', bullet => {
+    socket.broadcast.emit('broadcastBullet', bullet);
   });
   socket.on('allowVote', isAllow => {
     socket.broadcast.emit('toggleAllow', isAllow);
@@ -229,6 +270,28 @@ io.on('connect', socket => {
     socket.emit('numAudience', io.engine.clientsCount);
   });
   socket.on('disconnect', function() {
+    Singer.findOne({
+      where: { currentSinger: true },
+      attributes: { exclude: ['id', 'createdAt', 'updatedAt'] },
+    })
+      .then(singer => {
+        if (singer) {
+          singer
+            .update(
+              {
+                currentSinger: false,
+              },
+              { where: { _id: singer.id } },
+            )
+            .then(() => {
+              console.log('Back Stage disconnect from the server');
+            })
+            .catch(err => {
+              console.log(err);
+            });
+        }
+      })
+      .catch(err => console.log(err));
     console.log('user disconnected');
   });
 });

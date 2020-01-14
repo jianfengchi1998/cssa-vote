@@ -23,7 +23,6 @@ export function* requestAllSinger(action) {
   }
 }
 
-
 export default function* backStageSaga() {
   // See example in containers/HomePage/saga.js
   yield takeLatest(GET_ALL_SINGERS, requestAllSinger);

@@ -4,6 +4,8 @@
 
 const path = require('path');
 const webpack = require('webpack');
+const BUILD_FOLDER_PATH = process.env.BUILD_FOLDER_PATH || 'build';
+const PUBLIC_PATH = process.env.PUBLIC_PATH || '/';
 
 module.exports = options => ({
   mode: options.mode,
@@ -11,8 +13,8 @@ module.exports = options => ({
   output: Object.assign(
     {
       // Compile into js/build.js
-      path: path.resolve(process.cwd(), 'build'),
-      publicPath: '/',
+      path: path.resolve(process.cwd(), BUILD_FOLDER_PATH),
+      publicPath: PUBLIC_PATH,
     },
     options.output,
   ), // Merge with env dependent settings

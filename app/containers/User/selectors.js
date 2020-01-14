@@ -14,7 +14,6 @@ const selectUserDomain = state => state.user || initialState;
 /**
  * Default selector used by User
  */
-
 const makeSelectUser = () =>
   createSelector(
     selectUserDomain,
