@@ -119,7 +119,7 @@ const songlist = [
   },
 ];
 
-Singer.sync({force: true, logging: console.log})
+Singer.sync({ force: true, logging: console.log })
   .then(() => {
     // Now the `users` table in the database corresponds to the model definition
     data.map(singer => Singer.create(singer));

@@ -6,7 +6,7 @@ const path = require('path');
 const bodyParser = require('body-parser');
 
 const { sequelize, Singer } = require('./db');
-const {Op} = Sequelize;
+const { Op } = Sequelize;
 
 const cors = require('cors');
 const jwt = require('jsonwebtoken');
@@ -48,7 +48,7 @@ app.use(bodyParser.json());
 // app.use('/api', myApi);
 app.post('/getSinger', (req, res) => {
   Singer.findOne({
-    where: {performer: req.body.performer},
+    where: { performer: req.body.performer },
     attributes: { exclude: ['id', 'createdAt', 'updatedAt'] },
   })
     .then(singer => {
@@ -69,7 +69,7 @@ app.post('/getSinger', (req, res) => {
 
 app.post('/getCurrentSinger', (req, res) => {
   Singer.findOne({
-    where: {performed: true},
+    where: { performed: true },
     attributes: { exclude: ['id', 'createdAt', 'updatedAt'] },
   })
     .then(singer => {
@@ -104,7 +104,7 @@ app.post('/like', (req, res) => {
       // chain all your queries here. make sure you return them.
       Singer.findOne(
         {
-          where: {performer: req.body.performer},
+          where: { performer: req.body.performer },
           attributes: { exclude: ['createdAt', 'updatedAt'] },
         },
         { transaction: t },
@@ -113,7 +113,7 @@ app.post('/like', (req, res) => {
           singer
             .increment(
               'numVote',
-              {where: {performer: req.body.performer}},
+              { where: { performer: req.body.performer } },
               { transaction: t },
             )
             .then(data => {
@@ -142,7 +142,7 @@ app.post('/dislike', (req, res) => {
       // chain all your queries here. make sure you return them.
       Singer.findOne(
         {
-          where: {performer: req.body.performer},
+          where: { performer: req.body.performer },
           attributes: { exclude: ['createdAt', 'updatedAt'] },
         },
         { transaction: t },
@@ -151,7 +151,7 @@ app.post('/dislike', (req, res) => {
           singer
             .decrement(
               'numVote',
-              {where: {performer: req.body.performer}},
+              { where: { performer: req.body.performer } },
               { transaction: t },
             )
             .then(data => {
@@ -203,8 +203,8 @@ bsu.on('connection', socket => {
   console.log('User connected');
   socket.on('SendToUser', performer => {
     Singer.findOne({
-      where: {performer},
-      attributes: {exclude: ['createdAt', 'updatedAt']},
+      where: { performer },
+      attributes: { exclude: ['createdAt', 'updatedAt'] },
     })
       .then(singer => {
         if (singer) {
@@ -213,14 +213,14 @@ bsu.on('connection', socket => {
               {
                 performed: true,
               },
-              {where: {performer: singer.performer}},
+              { where: { performer: singer.performer } },
             )
             .then(() => {
               Singer.update(
                 {
                   performed: false,
                 },
-                {where: {performer: {[Op.ne]: singer.performer}}},
+                { where: { performer: { [Op.ne]: singer.performer } } },
               ).then(() => {
                 console.log('updated');
                 socket.broadcast.emit('fetch current singer', singer);
@@ -236,7 +236,7 @@ bsu.on('connection', socket => {
   socket.on('Get current performer', () => {
     console.log('first time enter');
     Singer.findOne({
-      where: {performed: true},
+      where: { performed: true },
       attributes: { exclude: ['id', 'createdAt', 'updatedAt'] },
     })
       .then(singer => {
@@ -272,7 +272,7 @@ io.on('connect', socket => {
   });
   socket.on('disconnect', function() {
     Singer.findOne({
-      where: {performed: true},
+      where: { performed: true },
       attributes: { exclude: ['id', 'createdAt', 'updatedAt'] },
     })
       .then(singer => {
