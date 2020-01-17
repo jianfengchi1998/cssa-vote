@@ -5,7 +5,7 @@
  */
 
 import React, { useEffect, useState } from 'react';
-import { Row, Col, Divider, Select, Switch, InputNumber } from 'antd';
+import { Divider, InputNumber, Row, Select, Switch } from 'antd';
 
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
@@ -14,15 +14,13 @@ import { compose } from 'redux';
 
 import { useInjectSaga } from 'utils/injectSaga';
 import { useInjectReducer } from 'utils/injectReducer';
-import makeSelectBackStage, {
-  makeSelectAllSingers,
-  makeSelectSingerInUser,
-} from './selectors';
+import makeSelectBackStage, { makeSelectAllSingers } from './selectors';
 
 import reducer from './reducer';
 import saga from './saga';
-import { startAllSingers, setSingerInUser, getSinger } from './actions';
+import { startAllSingers } from './actions';
 import { startVote } from '../User/actions';
+
 const io = require('socket.io-client');
 const socket = io(`${window.location.hostname}`);
 const bsu = io('/BackStage-User');
@@ -72,7 +70,7 @@ export function BackStage({
   };
   function onChange(checked) {
     console.log(`switch to ${checked}`);
-    bsu.emit('allowVote', checked);
+    // bsu.emit('allowVote', checked);
   }
   function onChangeTopResult(checked) {
     console.log(`switch to ${checked}`);

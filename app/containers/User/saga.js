@@ -1,13 +1,9 @@
-import { takeLatest, call, put, select } from 'redux-saga/effects';
+import { call, put, takeLatest } from 'redux-saga/effects';
 import request from '../../utils/request';
 import { API_URL } from '../../constants';
-import {
-  GET_SINGER,
-  SET_LIKE,
-  SET_DISLIKE,
-  GET_CURRENT_SINGER,
-} from './constants';
-import { setSingerInUser, getSingerFail, getCurrentSinger } from './actions';
+import { GET_SINGER, SET_DISLIKE, SET_LIKE } from './constants';
+import { getSingerFail, setSingerInUser } from './actions';
+
 const options = data => ({
   method: 'POST',
   headers: {
@@ -22,7 +18,7 @@ export function* requestSinger(action) {
     const response = yield call(
       request,
       `${API_URL}/getSinger`,
-      options({ name: action.payload }),
+      options({ performer: action.payload }),
     );
 
     yield put(setSingerInUser(response));
@@ -37,7 +33,7 @@ export function* requestCurrentSinger(action) {
     const response = yield call(
       request,
       `${API_URL}/getCurrentSinger`,
-      options({ name: action.payload }),
+      options({ performer: action.payload }),
     );
 
     yield put(setSingerInUser(response));
@@ -51,7 +47,7 @@ export function* toggleLike(action) {
     const response = yield call(
       request,
       `${API_URL}/like`,
-      options({ name: action.payload }),
+      options({ performer: action.payload }),
     );
 
     yield put(setSingerInUser(response));
@@ -64,7 +60,7 @@ export function* toggleDisLike(action) {
     const response = yield call(
       request,
       `${API_URL}/dislike`,
-      options({ name: action.payload }),
+      options({ performer: action.payload }),
     );
 
     yield put(setSingerInUser(response));

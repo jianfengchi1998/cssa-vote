@@ -1,23 +1,19 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
-import { Input, Row, Col, message, Button } from 'antd';
+import { Col, Input, message, Row } from 'antd';
 import Barrage from 'barrage-ui';
-import example from 'barrage-ui/example.json'; // 组件提供的示例数据
-
-import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { compose } from 'redux';
 
 import { useInjectSaga } from 'utils/injectSaga';
 import { useInjectReducer } from 'utils/injectReducer';
+import shortid from 'shortid';
 import SingerCard from '../../components/Card';
-import Danmu from '../../components/Danmu';
 import reducer from './reducer';
 import saga from './saga';
-import { makeSelectSingerInUser, makeSelectAllowVote } from './selectors';
-import { getSinger, setLike, setDisLike, getCurrentSinger } from './actions';
-import shortid from 'shortid';
+import { makeSelectSingerInUser } from './selectors';
+import { getCurrentSinger, getSinger, setDisLike, setLike } from './actions';
 
 const io = require('socket.io-client');
 const jwt = require('jsonwebtoken');
@@ -39,7 +35,7 @@ export function User({
   const [singerName, setName] = useState('');
   const [performer, setPerformer] = useState({});
   const [isLike, toggleLike] = useState(false);
-  const [allowVote, toggleAllowVote] = useState(false);
+  const [allowVote, toggleAllowVote] = useState(true);
   const cardRef = React.createRef();
 
   const [inputs, setInputs] = useState(null);
@@ -92,9 +88,9 @@ export function User({
     localStorage.setItem('name', singer.name);
     setPerformer(singer);
   });
-  bsu.on('toggleAllow', isAllow => {
-    toggleAllowVote(isAllow);
-  });
+  // bsu.on('toggleAllow', isAllow => {
+  //   toggleAllowVote(isAllow);
+  // });
   bsu.on('broadcastBullet', bulletData => {
     setBullet(bulletData);
     console.log(bulletData);

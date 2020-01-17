@@ -6,6 +6,7 @@ const path = require('path');
 const bodyParser = require('body-parser');
 
 const { sequelize, Singer } = require('./db');
+const {Op} = Sequelize;
 
 const cors = require('cors');
 const jwt = require('jsonwebtoken');
@@ -26,7 +27,6 @@ const io = require('socket.io')(http);
 
 app.use(cors());
 app.use(bodyParser.json());
-app.use(express.static('public'));
 // setup(app, {
 //   outputPath: resolve(process.cwd(), 'build'),
 //   publicPath: '/',
@@ -48,7 +48,7 @@ app.use(express.static('public'));
 // app.use('/api', myApi);
 app.post('/getSinger', (req, res) => {
   Singer.findOne({
-    where: { name: req.body.name },
+    where: {performer: req.body.performer},
     attributes: { exclude: ['id', 'createdAt', 'updatedAt'] },
   })
     .then(singer => {
@@ -56,16 +56,12 @@ app.post('/getSinger', (req, res) => {
         singer
           .update(
             {
-              currentSinger: true,
+              performed: true,
             },
             { where: { _id: singer.id } },
           )
-          .then(() => {
-            return res.status(200).json(singer);
-          })
-          .catch(() => {
-            return res.status(404);
-          });
+          .then(() => res.status(200).json(singer))
+          .catch(() => res.status(404));
       }
     })
     .catch(err => console.log(err));
@@ -73,7 +69,7 @@ app.post('/getSinger', (req, res) => {
 
 app.post('/getCurrentSinger', (req, res) => {
   Singer.findOne({
-    where: { currentSinger: true },
+    where: {performed: true},
     attributes: { exclude: ['id', 'createdAt', 'updatedAt'] },
   })
     .then(singer => {
@@ -108,7 +104,7 @@ app.post('/like', (req, res) => {
       // chain all your queries here. make sure you return them.
       Singer.findOne(
         {
-          where: { name: req.body.name },
+          where: {performer: req.body.performer},
           attributes: { exclude: ['createdAt', 'updatedAt'] },
         },
         { transaction: t },
@@ -117,11 +113,12 @@ app.post('/like', (req, res) => {
           singer
             .increment(
               'numVote',
-              { where: { name: req.body.name } },
+              {where: {performer: req.body.performer}},
               { transaction: t },
             )
             .then(data => {
               data.reload().then(() => {
+                console.log('in');
                 return res.status(200).json(data);
               });
             });
@@ -145,7 +142,7 @@ app.post('/dislike', (req, res) => {
       // chain all your queries here. make sure you return them.
       Singer.findOne(
         {
-          where: { name: req.body.name },
+          where: {performer: req.body.performer},
           attributes: { exclude: ['createdAt', 'updatedAt'] },
         },
         { transaction: t },
@@ -154,13 +151,11 @@ app.post('/dislike', (req, res) => {
           singer
             .decrement(
               'numVote',
-              { where: { name: req.body.name } },
+              {where: {performer: req.body.performer}},
               { transaction: t },
             )
             .then(data => {
-              data.reload().then(() => {
-                return res.status(200).json(data);
-              });
+              data.reload().then(() => res.status(200).json(data));
             });
         }
       });
@@ -181,9 +176,7 @@ app.get('/getToken', (req, res) => {
     'valid',
     'cssa',
     { algorithm: 'RS256', expiresIn: '1d' },
-    (err, token) => {
-      return res.send(token);
-    },
+    (err, token) => res.send(token),
   );
 });
 
@@ -208,22 +201,30 @@ app.get('*.js', (req, res, next) => {
 const bsu = io.of('/BackStage-User');
 bsu.on('connection', socket => {
   console.log('User connected');
-  socket.on('SendToUser', name => {
+  socket.on('SendToUser', performer => {
     Singer.findOne({
-      where: { name },
-      attributes: { exclude: ['id', 'createdAt', 'updatedAt'] },
+      where: {performer},
+      attributes: {exclude: ['createdAt', 'updatedAt']},
     })
       .then(singer => {
         if (singer) {
           singer
             .update(
               {
-                currentSinger: true,
+                performed: true,
               },
-              { where: { _id: singer.id } },
+              {where: {performer: singer.performer}},
             )
             .then(() => {
-              socket.broadcast.emit('fetch current singer', singer);
+              Singer.update(
+                {
+                  performed: false,
+                },
+                {where: {performer: {[Op.ne]: singer.performer}}},
+              ).then(() => {
+                console.log('updated');
+                socket.broadcast.emit('fetch current singer', singer);
+              });
             })
             .catch(err => {
               console.log(err);
@@ -235,7 +236,7 @@ bsu.on('connection', socket => {
   socket.on('Get current performer', () => {
     console.log('first time enter');
     Singer.findOne({
-      where: { currentSinger: true },
+      where: {performed: true},
       attributes: { exclude: ['id', 'createdAt', 'updatedAt'] },
     })
       .then(singer => {
@@ -248,9 +249,9 @@ bsu.on('connection', socket => {
   socket.on('saveBullet', bullet => {
     socket.broadcast.emit('broadcastBullet', bullet);
   });
-  socket.on('allowVote', isAllow => {
-    socket.broadcast.emit('toggleAllow', isAllow);
-  });
+  // socket.on('allowVote', isAllow => {
+  //   socket.broadcast.emit('toggleAllow', isAllow);
+  // });
 });
 
 const bss = io.of('/BackStage-Screen');
@@ -271,7 +272,7 @@ io.on('connect', socket => {
   });
   socket.on('disconnect', function() {
     Singer.findOne({
-      where: { currentSinger: true },
+      where: {performed: true},
       attributes: { exclude: ['id', 'createdAt', 'updatedAt'] },
     })
       .then(singer => {
@@ -279,7 +280,7 @@ io.on('connect', socket => {
           singer
             .update(
               {
-                currentSinger: false,
+                performed: false,
               },
               { where: { _id: singer.id } },
             )

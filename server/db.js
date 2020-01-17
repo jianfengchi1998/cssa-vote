@@ -1,10 +1,8 @@
 const Sequelize = require('sequelize');
 const data = require('./data.js');
 
-const sequelize = new Sequelize({
-  dialect: 'sqlite',
-  storage: './database.sqlite',
-  logging: false,
+const sequelize = new Sequelize('cssaVote', 'cssa', 'Gotigers2015', {
+  dialect: 'mysql',
 });
 sequelize
   .authenticate()
@@ -18,38 +16,39 @@ const Singer = sequelize.define(
   'singer',
   {
     // attributes
-    name: {
+    performer: {
       type: Sequelize.STRING,
       allowNull: false,
       primaryKey: true,
     },
-    photo: {
-      type: Sequelize.STRING,
-      allowNull: false,
-    },
+    // photo: {
+    //   type: Sequelize.STRING,
+    //   allowNull: false,
+    // },
     description: {
       type: Sequelize.STRING,
       allowNull: false,
     },
-    songName: {
+    title: {
       type: Sequelize.STRING,
       allowNull: false,
     },
     numVote: {
-      type: Sequelize.NUMBER,
+      type: Sequelize.INTEGER,
       allowNull: false,
     },
-    judges: {
-      type: Sequelize.NUMBER,
-      allowNull: false,
-    },
-    currentSinger: {
+    // judges: {
+    //   type: Sequelize.INTEGER,
+    //   allowNull: false,
+    // },
+    performed: {
       type: Sequelize.BOOLEAN,
       allowNull: false,
     },
   },
   {
-    // options
+    freezeTableName: true,
+    charset: 'utf8',
   },
 );
 
@@ -120,12 +119,14 @@ const songlist = [
   },
 ];
 
-// Singer.sync({ force: true }).then(() => {
-//   // Now the `users` table in the database corresponds to the model definition
-//   data.map(singer => {
-//     return Singer.create(singer);
-//   });
-// });
+Singer.sync({force: true, logging: console.log})
+  .then(() => {
+    // Now the `users` table in the database corresponds to the model definition
+    data.map(singer => Singer.create(singer));
+  })
+  .catch(err => {
+    console.log(err);
+  });
 // SongList.sync({ force: true }).then(() => {
 //   // Now the `users` table in the database corresponds to the model definition
 //   songlist.map(singer => {
